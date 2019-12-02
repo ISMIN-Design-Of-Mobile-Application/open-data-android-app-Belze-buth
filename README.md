@@ -1,13 +1,13 @@
 
-## [APP NAME]  
+## [ParkFinder]  
   
 Codé par :   
- - [prenom1] [nom1]   
- - [prenom2] [nom2]   
+ - [Rahman] [Torba]   
+ - [Clément] [Royer]   
 
 ## Description  
   
-URL des données : [URL]  
+URL des données : [http://opendata.nicecotedazur.org/data/storage/f/2014-06-24T18%3A03%3A28.498Z/carto-parkings.json]  
   
 [A completer]  
   

@@ -6,9 +6,11 @@
     tools:context=".ParkListFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/f_parkList_rcv_parking"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="parkList" />
+        tools:listitem="@layout/row_park" />
 
 </FrameLayout>

@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * A simple [Fragment] subclass.
@@ -18,13 +20,36 @@ class ParkListFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
 
+    lateinit  var recyclerView : RecyclerView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_park_list, container, false)
+        val rootview = inflater.inflate(R.layout.fragment_park_list, container, false)
+
+        val data = arguments!!.getSerializable(TRANSMITT_PARKS_EXTRA_KEY)as Data
+
+        recyclerView = rootview.findViewById<RecyclerView>(R.id.f_parkList_rcv_parking)
+
+
+        val adapter = ParkAdapter(data)
+        recyclerView.adapter = adapter
+
+        recyclerView.adapter?.notifyDataSetChanged()
+
+        val layourManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = layourManager
+
+        return rootview
     }
+
+        // Inflate the layout for this fragment
+
+
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {

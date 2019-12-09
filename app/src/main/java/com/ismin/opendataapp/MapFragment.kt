@@ -7,6 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 /**
  * A simple [Fragment] subclass.
@@ -14,14 +21,18 @@ import android.view.ViewGroup
  * [MapFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
  */
-class MapFragment : Fragment() {
+class MapFragment : Fragment()/*, OnMapReadyCallback */{
     private var listener: OnFragmentInteractionListener? = null
+    //private lateinit var mMap: GoogleMap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        //val mapFragment = MapFragment
+         //   .findFragmentById(R.id.f_map) as SupportMapFragment
+       // mapFragment.getMapAsync(this)
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
 
@@ -60,4 +71,12 @@ class MapFragment : Fragment() {
         fun onFragmentInteraction(uri: Uri)
     }
 
+    /*override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+
+        // Add a marker in Sydney and move the camera
+        val nice = LatLng(7.2, 43.6)
+        mMap.addMarker(MarkerOptions().position(nice).title("Marker in Nice"))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(nice))
+    }*/
 }

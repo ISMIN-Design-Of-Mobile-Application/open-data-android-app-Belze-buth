@@ -28,6 +28,7 @@ class InfoFragment : Fragment() {
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
+
     }
 
     override fun onAttach(context: Context) {

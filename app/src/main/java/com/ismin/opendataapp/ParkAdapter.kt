@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class ParkAdapter (private val data: Data) :
+class ParkAdapter (private val data: ArrayList<Parking>) :
 RecyclerView.Adapter<ParkViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParkViewHolder {
@@ -16,7 +16,7 @@ RecyclerView.Adapter<ParkViewHolder>() {
     }
 
     override fun onBindViewHolder(viewholder: ParkViewHolder, position: Int) {
-        val parkings = this.data.getParks()
+        val parkings = this.data
         val name = parkings[position].getName()
         val type = parkings[position].getType()
 
@@ -25,6 +25,6 @@ RecyclerView.Adapter<ParkViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return this.data.getParks().size
+        return this.data.size
     }
 }

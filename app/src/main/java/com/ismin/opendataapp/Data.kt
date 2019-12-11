@@ -1,10 +1,9 @@
 package com.ismin.opendataapp
 
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class Data (val data : ArrayList<Parking>) : Serializable {
 
-    fun getParks (): ArrayList<Parking> {
-        return data
-    }
-}
+data class Data (
+    @SerializedName("docs")
+    val docs : ArrayList<Parking>) : Serializable

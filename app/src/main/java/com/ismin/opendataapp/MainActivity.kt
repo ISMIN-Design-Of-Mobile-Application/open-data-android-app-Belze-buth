@@ -1,5 +1,6 @@
 package com.ismin.opendataapp
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -8,8 +9,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_park_list.*
 import kotlinx.android.synthetic.main.fragment_park_list.view.*
 import retrofit2.Call
@@ -47,10 +50,12 @@ class MainActivity : AppCompatActivity(), MapFragment.OnFragmentInteractionListe
         val parking =  Parking(Geometry("point", coord),"parking1", "auto",1)
         parkingsList.docs.add(parking)
 
-        getDataFromServer()
+        //getDataFromServer()
         setSupportActionBar(toolbar)
-        putParkingList()
+        //putParkingList()
         newFrag()
+
+
     }
 
     override fun onFragmentInteraction(uri: Uri) {
@@ -63,6 +68,26 @@ class MainActivity : AppCompatActivity(), MapFragment.OnFragmentInteractionListe
         adapter.addFragment(ParkListFragment(), "List")
         adapter.addFragment(MapFragment(), "GeMap")
         adapter.addFragment(InfoFragment(), "Info")
+
+        viewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                
+            }
+            override fun onPageSelected(position: Int) {
+                if(position==2 || position==1){
+                    parkingsList.docs.clear()
+                    putParkingList()
+
+                }
+                else {getDataFromServer()}
+
+            }
+
+        })
         viewPager.adapter = adapter
         tabs.setupWithViewPager(viewPager)
 
@@ -90,6 +115,7 @@ class MainActivity : AppCompatActivity(), MapFragment.OnFragmentInteractionListe
                     response: Response<Data>
                 ) {
                     val allParking = response.body()
+                    parkingsList.docs.clear()
                     parkingsList.docs += allParking!!.docs
                     putParkingList()
                     Log.v(

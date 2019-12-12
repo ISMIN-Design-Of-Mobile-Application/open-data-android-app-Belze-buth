@@ -3,47 +3,63 @@ package com.ismin.opendataapp
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [MapFragment.OnFragmentInteractionListener] interface
+ * [InfoFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
  */
-class MapFragment : Fragment()/*, OnMapReadyCallback */{
+
+class MapFragment : Fragment(), OnMapReadyCallback{
+
     private var listener: OnFragmentInteractionListener? = null
-    //private lateinit var mMap: GoogleMap
+
+    private lateinit var mMap: GoogleMap
+    private lateinit var data: ArrayList<Parking>
+
+    lateinit var positions : ArrayList<Geometry>
+
+    override fun onStart() {
+        super.onStart()
+        val mapFragment = childFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        //val mapFragment = MapFragment
-         //   .findFragmentById(R.id.f_map) as SupportMapFragment
-       // mapFragment.getMapAsync(this)
-        return inflater.inflate(R.layout.fragment_map, container, false)
-    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+        //recupere les datas
+        val serializableData = arguments?.getSerializable(TRANSMITT_PARKS_EXTRA_KEY)
+        if (serializableData !=null){
+            data = serializableData as ArrayList<Parking>
+            for (el in data){
+                positions.add(el.getPosition())
+            }
+
+        }
+
+
+        return inflater.inflate(R.layout.fragment_map, container, false)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is MapFragment.OnFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
@@ -55,28 +71,29 @@ class MapFragment : Fragment()/*, OnMapReadyCallback */{
         listener = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+
+        // Add a marker in Niceand move the camera
+        val nice = LatLng(7.2, 43.6)
+        mMap.addMarker(MarkerOptions().position(nice).title("Marker in Nice"))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(nice))
+        addItemsOnMap()
+    }
+
+    fun addItemsOnMap() {
+        for ((name,coord) in positions) {
+            val loc = LatLng(coord[0].toDouble(), coord[1].toDouble())
+            mMap.addMarker(MarkerOptions().position(loc).title(name)).tag
+        }
+    }
+    // TODO: Rename method, update argument and hook method into UI event
+    fun onButtonPressed(uri: Uri) {
+        listener?.onFragmentInteraction(uri)
+
+    }
     interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
-
-    /*override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-
-        // Add a marker in Sydney and move the camera
-        val nice = LatLng(7.2, 43.6)
-        mMap.addMarker(MarkerOptions().position(nice).title("Marker in Nice"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(nice))
-    }*/
 }

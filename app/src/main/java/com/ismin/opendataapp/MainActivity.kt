@@ -21,7 +21,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainActivity : AppCompatActivity(), MapFragment.OnFragmentInteractionListener,
+class MainActivity : AppCompatActivity(),
     InfoFragment.OnFragmentInteractionListener, ParkListFragment.OnFragmentInteractionListener {
 
     private val parkingsList = Data( ArrayList<Parking>())
@@ -104,8 +104,8 @@ class MainActivity : AppCompatActivity(), MapFragment.OnFragmentInteractionListe
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
         fragmentTransaction.commit()
 
-
     }
+
     fun getDataFromServer() {
 
         dataService.getData()

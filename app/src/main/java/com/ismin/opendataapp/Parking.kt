@@ -21,5 +21,9 @@ data class Parking (
     fun getType (): String {
         return SOUS_TYPE
     }
+
+    fun getPosition (): Geometry{
+        return geometry
+    }
 }
 

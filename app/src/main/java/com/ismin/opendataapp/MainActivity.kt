@@ -22,7 +22,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(),
-    InfoFragment.OnFragmentInteractionListener, ParkListFragment.OnFragmentInteractionListener {
+    InfoFragment.OnFragmentInteractionListener, ParkListFragment.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener {
 
     private val parkingsList = Data( ArrayList<Parking>())
     private val coord=ArrayList<Float>()
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(),
             override fun onPageSelected(position: Int) {
                 if(position==2 || position==1){
                     parkingsList.docs.clear()
-                    putParkingList()
+                    putParkingListMap()
 
                 }
                 else {getDataFromServer()}
@@ -106,6 +106,19 @@ class MainActivity : AppCompatActivity(),
 
     }
 
+
+    fun putParkingListMap(){
+
+        val fragmentList = MapFragment()
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        val bundle = Bundle()
+        bundle.putSerializable(TRANSMITT_PARKS_EXTRA_KEY, parkingsList.docs)
+        fragmentList.arguments = bundle
+        fragmentTransaction.replace(R.id.a_main_rootview, fragmentList)
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+        fragmentTransaction.commit()
+
+    }
     fun getDataFromServer() {
 
         dataService.getData()

@@ -3,6 +3,7 @@ package com.ismin.opendataapp
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,8 @@ import com.google.android.gms.maps.model.MarkerOptions
  * [InfoFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
  */
+private val coord=ArrayList<Float>()
+
 
 class MapFragment : Fragment(), OnMapReadyCallback{
 
@@ -29,7 +32,8 @@ class MapFragment : Fragment(), OnMapReadyCallback{
     private lateinit var mMap: GoogleMap
     private lateinit var data: ArrayList<Parking>
 
-    lateinit var positions : ArrayList<Geometry>
+   private val positions = ArrayList<Geometry>()
+    val nice = LatLng(7.2, 43.6)
 
     override fun onStart() {
         super.onStart()
@@ -42,6 +46,11 @@ class MapFragment : Fragment(), OnMapReadyCallback{
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        coord.add(7.2f)
+        coord.add(64.2f)
+        val geomet= Geometry("test", coord)
+        positions.add(geomet)
 
         //recupere les datas
         val serializableData = arguments?.getSerializable(TRANSMITT_PARKS_EXTRA_KEY)
@@ -75,16 +84,19 @@ class MapFragment : Fragment(), OnMapReadyCallback{
         mMap = googleMap
 
         // Add a marker in Niceand move the camera
-        val nice = LatLng(7.2, 43.6)
+       // val nice = LatLng(7.2, 43.6)
         mMap.addMarker(MarkerOptions().position(nice).title("Marker in Nice"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(nice))
         addItemsOnMap()
     }
 
     fun addItemsOnMap() {
-        for ((name,coord) in positions) {
-            val loc = LatLng(coord[0].toDouble(), coord[1].toDouble())
-            mMap.addMarker(MarkerOptions().position(loc).title(name)).tag
+        if(positions != null) {
+            Log.v("additems", "positions pas null" + positions.toString())
+            for ((name, coord) in positions) {
+                val loc = LatLng(coord[0].toDouble(), coord[1].toDouble())
+                mMap.addMarker(MarkerOptions().position(loc).title(name)).tag
+            }
         }
     }
     // TODO: Rename method, update argument and hook method into UI event

@@ -33,7 +33,7 @@ class MapFragment : Fragment(), OnMapReadyCallback{
     private lateinit var data: ArrayList<Parking>
 
    private val positions = ArrayList<Geometry>()
-    val nice = LatLng(7.2, 43.6)
+    val nice = LatLng(43.7031,7.2661)
 
     override fun onStart() {
         super.onStart()
@@ -47,13 +47,10 @@ class MapFragment : Fragment(), OnMapReadyCallback{
         savedInstanceState: Bundle?
     ): View? {
 
-        coord.add(7.2f)
-        coord.add(64.2f)
-        val geomet= Geometry("test", coord)
-        positions.add(geomet)
+
 
         //recupere les datas
-        val serializableData = arguments?.getSerializable(TRANSMITT_PARKS_EXTRA_KEY)
+        val serializableData = arguments?.getSerializable(TRANSMITT_PARKS_MAP_EXTRA_KEY)
         if (serializableData !=null){
             data = serializableData as ArrayList<Parking>
             for (el in data){
@@ -94,7 +91,7 @@ class MapFragment : Fragment(), OnMapReadyCallback{
         if(positions != null) {
             Log.v("additems", "positions pas null" + positions.toString())
             for ((name, coord) in positions) {
-                val loc = LatLng(coord[0].toDouble(), coord[1].toDouble())
+                val loc = LatLng(coord[1].toDouble(), coord[0].toDouble())
                 mMap.addMarker(MarkerOptions().position(loc).title(name)).tag
             }
         }

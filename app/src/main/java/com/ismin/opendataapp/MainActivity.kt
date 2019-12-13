@@ -25,13 +25,14 @@ class MainActivity : AppCompatActivity(),
     InfoFragment.OnFragmentInteractionListener, ParkListFragment.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener {
 
     private val parkingsList = Data( ArrayList<Parking>())
+    private var parkingsList1 = Data( ArrayList<Parking>())
     private val coord=ArrayList<Float>()
 
 
 
     private val SERVER_BASE_URL = "https://opendata.nicecotedazur.org/"
-    private var PARKING_ARGUMENTS_KEY = "PARKING_ARGUMENTS_KEY"
 
+    private var TRANSMITT_PARKS_MAP_EXTRA_KEY="2"
 
     val retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
@@ -49,10 +50,9 @@ class MainActivity : AppCompatActivity(),
         coord.add(0.2f)
         val parking =  Parking(Geometry("point", coord),"parking1", "auto",1)
         parkingsList.docs.add(parking)
-
-        //getDataFromServer()
+        parkingsList1=parkingsList
+        getDataFromServer()
         setSupportActionBar(toolbar)
-        //putParkingList()
         newFrag()
 
 
@@ -71,19 +71,24 @@ class MainActivity : AppCompatActivity(),
 
         viewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
+
             override fun onPageScrollStateChanged(state: Int) {
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                
+
             }
             override fun onPageSelected(position: Int) {
-                if(position==2 || position==1){
-                    parkingsList.docs.clear()
-                    putParkingListMap()
 
+                if( position==1){
+                    //putParkingList(ArrayList<Parking>())
+                    putParkingListMap()
                 }
-                else {getDataFromServer()}
+                if(position==2){
+                    putParkingList(ArrayList<Parking>())
+                }
+                if(position==0)
+                    {putParkingList(parkingsList.docs)}
 
             }
 
@@ -93,29 +98,30 @@ class MainActivity : AppCompatActivity(),
 
     }
 
-    fun putParkingList(){
+    fun putParkingList(list :ArrayList<Parking> ){
 
         val fragmentList = ParkListFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         val bundle = Bundle()
-        bundle.putSerializable(TRANSMITT_PARKS_EXTRA_KEY, parkingsList.docs)
+        bundle.putSerializable(TRANSMITT_PARKS_EXTRA_KEY, list)
         fragmentList.arguments = bundle
         fragmentTransaction.replace(R.id.a_main_rootview, fragmentList)
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         fragmentTransaction.commit()
-
     }
 
 
     fun putParkingListMap(){
 
-        val fragmentList = MapFragment()
+        val fragmentMap = MapFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         val bundle = Bundle()
-        bundle.putSerializable(TRANSMITT_PARKS_EXTRA_KEY, parkingsList.docs)
-        fragmentList.arguments = bundle
-        fragmentTransaction.replace(R.id.a_main_rootview, fragmentList)
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+        bundle.putSerializable(TRANSMITT_PARKS_MAP_EXTRA_KEY, parkingsList.docs)
+        fragmentMap.arguments = bundle
+        fragmentTransaction.replace(R.id.a_main_rootview, fragmentMap)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         fragmentTransaction.commit()
 
     }
@@ -130,7 +136,8 @@ class MainActivity : AppCompatActivity(),
                     val allParking = response.body()
                     parkingsList.docs.clear()
                     parkingsList.docs += allParking!!.docs
-                    putParkingList()
+                    putParkingList(parkingsList.docs)
+                    //putParkingListMap()
                     Log.v(
                         "message",
                         allParking!!.docs.size.toString() + "heysdjkfhksdjFSJKSDNFSDQFNSNCSN VSN?DSN?DSN???????????yyyyyyyyyyy"

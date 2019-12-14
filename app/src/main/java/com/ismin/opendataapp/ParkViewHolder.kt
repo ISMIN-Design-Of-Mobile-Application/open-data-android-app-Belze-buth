@@ -11,5 +11,6 @@ class ParkViewHolder(rootView: View ) : RecyclerView.ViewHolder(rootView) {
     init {
         this.txvName = rootView.findViewById(R.id.r_icon_txv_name)
         this.txvType = rootView.findViewById(R.id.r_icon_txv_type)
+        //this.setOnClickListener
     }
 }

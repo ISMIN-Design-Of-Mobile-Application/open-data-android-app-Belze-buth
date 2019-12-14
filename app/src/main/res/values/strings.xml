@@ -3,4 +3,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="description_de_l_application" />
+    <string name="m_but_renewData">bo</string>
+
+    <string name="a_propos_titre">Information sur l\'application :</string>
+    <string name="a_propos">Cette appli répertorie les parkings de Nice et les affiche sur la carte. Je sais pas quoi écrire de plus ! Donc c\'est tout :)</string>
 </resources>

@@ -8,4 +8,5 @@
 
     <string name="a_propos_titre">Information sur l\'application :</string>
     <string name="a_propos">Cette appli répertorie les parkings de Nice et les affiche sur la carte. Je sais pas quoi écrire de plus ! Donc c\'est tout :)</string>
+    <string name="refresh">Button</string>
 </resources>

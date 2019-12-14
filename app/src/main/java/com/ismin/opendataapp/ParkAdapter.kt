@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class ParkAdapter (private val data: ArrayList<Parking>) :
-RecyclerView.Adapter<ParkViewHolder>() {
+class ParkAdapter (private val data: ArrayList<Parking>, private val  clickListener: (Parking) -> Unit) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParkViewHolder {
         val row = LayoutInflater.from(parent.context).inflate(R.layout.row_park, parent,
@@ -15,14 +15,13 @@ RecyclerView.Adapter<ParkViewHolder>() {
         return ParkViewHolder(row)
     }
 
-    override fun onBindViewHolder(viewholder: ParkViewHolder, position: Int) {
-        val parkings = this.data
-        val name = parkings[position].getName()
-        val type = parkings[position].getType()
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            // Populate ViewHolder with data that corresponds to the position in the list
+            // which we are told to load
+            (holder as ParkViewHolder).bind(data[position], clickListener)
+        }
 
-        viewholder.txvName.text = name
-        viewholder.txvType.text = type
-    }
+
 
     override fun getItemCount(): Int {
         return this.data.size

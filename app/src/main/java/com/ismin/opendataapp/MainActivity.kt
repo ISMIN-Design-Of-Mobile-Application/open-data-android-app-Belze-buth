@@ -5,13 +5,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,6 +23,12 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.view.Menu
+import android.view.MenuItem
+
 
 class MainActivity : AppCompatActivity(),
     InfoFragment.OnFragmentInteractionListener, ParkListFragment.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener {
@@ -31,7 +37,7 @@ class MainActivity : AppCompatActivity(),
     private var parkingsList1 = Data( ArrayList<Parking>())
     private val coord=ArrayList<Float>()
 
-
+    lateinit  var recyclerView : RecyclerView
 
     private val SERVER_BASE_URL = "https://opendata.nicecotedazur.org/"
 
@@ -60,11 +66,6 @@ class MainActivity : AppCompatActivity(),
 
 
     }
-
-    override fun onFragmentInteraction(uri: Uri) {
-        // TODO Implement
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
@@ -72,10 +73,10 @@ class MainActivity : AppCompatActivity(),
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.m_but_renewData -> {
+            R.id.action_refresh -> {
                 getDataFromServer()
                 // User chose the "Settings" item, show the app settings UI...
-                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Mis à jour des données ", Toast.LENGTH_SHORT).show()
                 true
             }
             // If we got here, the user's action was not recognized.
@@ -84,12 +85,18 @@ class MainActivity : AppCompatActivity(),
     }
 
 
-        fun newFrag() {
+
+    override fun onFragmentInteraction(uri: Uri) {
+        // TODO Implement
+    }
+
+    fun newFrag() {
 
         val adapter = ViewAdapter(supportFragmentManager)
         adapter.addFragment(ParkListFragment(), "List")
         adapter.addFragment(MapFragment(), "GeMap")
         adapter.addFragment(InfoFragment(), "Info")
+
 
         viewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
@@ -110,7 +117,7 @@ class MainActivity : AppCompatActivity(),
                     putParkingList(ArrayList<Parking>())
                 }
                 if(position==0)
-                    {putParkingList(parkingsList.docs)}
+                {putParkingList(parkingsList.docs)}
 
             }
 
@@ -131,6 +138,7 @@ class MainActivity : AppCompatActivity(),
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         fragmentTransaction.commit()
+
     }
 
 
@@ -173,7 +181,14 @@ class MainActivity : AppCompatActivity(),
             })
     }
 
-
+    public fun partItemClicked(parkItem : Parking) {
+        Toast.makeText(this, "Clicked: ${parkItem.NOM}", Toast.LENGTH_LONG).show()
+        val showDetailActivityIntent = Intent(this, DetailPark::class.java)
+        val extras = Bundle()
+        extras.putString("NOM",parkItem.NOM)
+        extras.putString("TYPE",parkItem.getType())
+        showDetailActivityIntent.putExtras(extras)
+        startActivity(showDetailActivityIntent)
+    }
 }
-
 

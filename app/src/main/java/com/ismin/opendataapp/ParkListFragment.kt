@@ -1,6 +1,7 @@
 package com.ismin.opendataapp
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -28,14 +30,17 @@ class ParkListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+
+
         val rootview = inflater.inflate(R.layout.fragment_park_list, container, false)
+        recyclerView = rootview.findViewById<RecyclerView>(R.id.f_parkList_rcv_parking)
+
         val serializableData = arguments?.getSerializable(TRANSMITT_PARKS_EXTRA_KEY)
         if (serializableData !=null){
            val data= serializableData as ArrayList<Parking>
             Log.v("message_fragment", data.toString())
-
-            recyclerView = rootview.findViewById<RecyclerView>(R.id.f_parkList_rcv_parking)
-            val adapter = ParkAdapter(data)
+            //recyclerView = rootview.findViewById<RecyclerView>(R.id.f_parkList_rcv_parking)
+            val adapter = ParkAdapter(data,{ parkItem : Parking -> (activity as MainActivity).partItemClicked(parkItem) })
             recyclerView.adapter = adapter
             recyclerView.adapter?.notifyDataSetChanged()
             recyclerView.layoutManager = LinearLayoutManager(context)
@@ -44,7 +49,7 @@ class ParkListFragment : Fragment() {
         return rootview
     }
 
-        // Inflate the layout for this fragment
+
 
 
 
